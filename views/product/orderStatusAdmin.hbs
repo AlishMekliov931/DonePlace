@@ -1,0 +1,23 @@
+  <h1>Manage orders</h1>
+            <div class="orders">
+				<form method="post">
+                    {{#each orders}}
+                    <div class="order">
+						<span class="order-time">{{this.getDate}}</span>
+						<span class="order-name">{{this.product.category}} doner, {{this.product.size}} cm</span>
+						<span class="order-status">
+							<select name="{{this._id}}" selected="{{this.status}}">
+								<option selected="selected" value="{{this.status}}">{{this.status}}</option>
+                                {{#each this.statusOption}}
+                                <option value="{{this}}">{{this}}</option>
+                                {{/each}}								
+							</select>
+						</span>
+						<a href="/details/{{this._id}}" class="button order-button">Details</a>
+					</div>
+                    {{else}}
+                    No orders
+                    {{/each}}									
+					<input type="submit" value="Save Changes" class="button" style="border:0">
+				</form>
+            </div>

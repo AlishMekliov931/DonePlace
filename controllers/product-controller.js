@@ -49,7 +49,8 @@ module.exports = {
             toppings: toppings
         }).then((order) => {
             Order.findById(order).populate('product').then(order => {
-                res.render('product/details', order)
+                let pStat = setPstatus(order.status)
+                res.render('product/details', {order, pStat})
             }).catch(console.log)          
         }).catch(console.log)
     },
@@ -85,23 +86,7 @@ module.exports = {
      details: (req, res) => {
         let orderId = req.params.id
         Order.findById(orderId).populate('product').then(order => {
-            let pStat = {}
-            switch (order.status) {
-                case 'Pending':
-                    pStat.Painding = true
-                    break;
-                case 'In Progress':
-                    pStat.inProgress = true
-                    break;
-                case 'In Transit':
-                    pStat.inTransit = true
-                    break;
-                case 'Delivered':
-                    pStat.Delivered = true
-                    break;
-                default:
-                    break;
-            }
+           let pStat = setPstatus(order.status)
             res.render('product/details', {
                 order,
                 pStat
@@ -122,3 +107,26 @@ module.exports = {
        
     }
 };
+
+function setPstatus(stat) {
+     let pStat = {}
+    switch (stat) {
+        case 'Pending':
+            pStat.Painding = true
+            return pStat
+            
+        case 'In Progress':
+            pStat.inProgress = true
+           return pStat
+           
+        case 'In Transit':
+            pStat.inTransit = true
+           return pStat
+           
+        case 'Delivered':
+            pStat.Delivered = true
+           return pStat
+        default:
+            break;
+    }
+}

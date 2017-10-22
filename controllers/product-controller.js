@@ -82,11 +82,31 @@ module.exports = {
         
         res.redirect('back')
     },
-    details: (req, res) => {
+     details: (req, res) => {
         let orderId = req.params.id
         Order.findById(orderId).populate('product').then(order => {
-            res.render('product/details', order)
-        }).catch(console.log)  
+            let pStat = {}
+            switch (order.status) {
+                case 'Pending':
+                    pStat.Painding = true
+                    break;
+                case 'In Progress':
+                    pStat.inProgress = true
+                    break;
+                case 'In Transit':
+                    pStat.inTransit = true
+                    break;
+                case 'Delivered':
+                    pStat.Delivered = true
+                    break;
+                default:
+                    break;
+            }
+            res.render('product/details', {
+                order,
+                pStat
+            })
+        }).catch(console.log)
     },
     delete: (req, res) => {
         Product.findByIdAndRemove(req.params.id).then(product => { 
